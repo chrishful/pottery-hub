@@ -226,3 +226,10 @@ input, textarea {
   padding: 6px 12px;
   border-radius: 6px;
 }
+
+.no-posts {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+  font-size: 1.25rem;
+}

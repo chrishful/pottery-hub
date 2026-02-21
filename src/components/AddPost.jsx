@@ -8,6 +8,7 @@ export default function AddPost(props) {
       const [image, setImage] = useState("");
       const [description, setDescription] = useState("");
       const [file, setFile] = useState(null);
+      const [uploading, setUploading] = useState(false);
 
 
         async function addPost() {
@@ -15,12 +16,16 @@ export default function AddPost(props) {
 
           const fileName = `${Date.now()}-${file.name}`;
 
+         if (uploading) return;
+         setUploading(true)
+
           const { error: uploadError } = await supabase.storage
             .from("pottery-images")
             .upload(fileName, file);
 
           if (uploadError) {
             console.error(uploadError);
+            setUploading(false);
             return alert("Upload failed");
           }
 
@@ -47,6 +52,7 @@ export default function AddPost(props) {
 
         await props.fetchPosts();
         props.setAddOpen(false);
+        setUploading(false);
         }
 
       return (

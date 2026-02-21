@@ -49,6 +49,7 @@ export default function App() {
     async function signIn(email, password) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) alert("Error signing in: " + error.message);
+        else setAuthOpen(false);
     }
 
   async function fetchPosts() {
@@ -130,6 +131,8 @@ export default function App() {
 
          {/* Feed */}
          <div className="feed">
+             {console.log(posts)}
+           {posts.length == 0 && <p className="no-posts">Looks like there are no posts. *crickets*</p>}
            {posts.map((post) => (
              <div key={post.id} className="card">
                <img src={post.image} alt={post.title} className="card-image" />
