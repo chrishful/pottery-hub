@@ -1,18 +1,49 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./index.css";
+import AddPost from "./components/AddPost";
+import { User } from "lucide-react";
+import { Plus } from "lucide-react";
+import Auth from "./components/Auth";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [image, setImage] = useState("");
-  const [description, setDescription] = useState("");
-  const [file, setFile] = useState(null);
+  const [session, setSession] = useState(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+    useEffect(() => {
+        // so notes- basically useEffect runs once before the component renders ([]), and then we call getSession, then sets the session locally.
+        const session = supabase.auth.getSession().then(({ data }) => {
+            setSession(data.session);
+            });
+        // Then it basically creates a listener so that if the auth state changes, it refreshes.
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+            setSession(session);
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
+
+  async function signUp() {
+      const email = prompt("Enter your email:");
+        const password = prompt("Enter your password:");
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) alert("Error signing up: " + error.message);
+    }
+
+    async function signIn() {
+        const email = prompt("Enter your email:");
+        const password = prompt("Enter your password:");
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) alert("Error signing in: " + error.message);
+    }
 
   async function fetchPosts() {
     const { data, error } = await supabase
@@ -23,88 +54,92 @@ export default function App() {
     if (!error) setPosts(data);
   }
 
-    async function addPost() {
-      if (!file) return alert("Please select an image");
-
-      const fileName = `${Date.now()}-${file.name}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("pottery-images")
-        .upload(fileName, file);
-
-      if (uploadError) {
-        console.error(uploadError);
-        return alert("Upload failed");
-      }
-
-      const { data } = supabase.storage
-        .from("pottery-images")
-        .getPublicUrl(fileName);
-
-      const publicUrl = data.publicUrl;
-
-      await supabase.from("posts").insert([
-        {
-          title,
-          artist,
-          image: publicUrl,
-          description
-        }
-      ]);
-
-      setTitle("");
-      setArtist("");
-      setDescription("");
-      setFile(null);
-
-      fetchPosts();
-    }
-
     async function deletePost(post) {
-        console.log("Deleting post:", post);
-      if (post.image) {
-        const imagePath = post.image.split("/storage/v1/object/public/pottery-images/")[1];
-        console.log(imagePath);
-        const { error: storageError } = await supabase.storage
-          .from("pottery-images")
-          .remove([imagePath]);
-
-        if (storageError) console.error("Storage delete error:", storageError);
-      }
-
+      console.log("Deleting post:", post.id);
       const { error } = await supabase.from("posts").delete().eq("id", post.id);
       if (error) console.error("Post delete error:", error);
+      else {
+          if (post.image) {
+              const imagePath = post.image.split("/storage/v1/object/public/pottery-images/")[1];
+              const { error: storageError } = await supabase.storage
+                  .from("pottery-images")
+                  .remove([imagePath]);
 
+               if (storageError) console.error("Storage delete error:", storageError);
+               }
+            }
       fetchPosts();
     }
 
-  return (
-    <div className="container">
-      <h1>Pottery Hub</h1>
+     return (
+       <div className="container">
+         <h1 className="title">Pottery Hub</h1>
 
-      <div className="form">
-        <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-        <input placeholder="Artist" value={artist} onChange={e => setArtist(e.target.value)} />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <textarea placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
-        <button onClick={addPost}>Add Post</button>
-      </div>
+         {/* Top-right user icon */}
+         <button className="floating-button user-button" onClick={() => setAuthOpen(!authOpen)}>
+           <User size={30} />
+         </button>
 
-      {posts.map(post => (
-        <div key={post.id} className="card">
-          <img src={post.image} alt={post.title} />
-          <div className="content">
-            <h2>{post.title}</h2>
-            <p className="artist">by {post.artist}</p>
-            <p>{post.description}</p>
-            <button onClick={() => deletePost(post)}>Delete</button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+         {/* Bottom-right add (+) icon */}
+         {session && (
+           <button className="floating-button add-button" onClick={() => setAddOpen(true)}>
+             <Plus size={30} />
+           </button>
+         )}
+
+         {/* Auth Drawer */}
+         {authOpen && (
+           <>
+             <div className="backdrop" onClick={() => setAuthOpen(!authOpen)}></div>
+             <div className="drawer auth-drawer">
+                 <button className="floating-button user-button-auth-drawer" onClick={() => setAuthOpen(!authOpen)}>
+                   <User size={30} />
+                 </button>
+               {!session ? (
+                 <Auth signUp={signUp} signIn={signIn} />
+               ) : (
+                 <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
+                   Sign Out
+                 </button>
+               )}
+               <button className="close-btn" onClick={() => setAuthOpen(false)}>
+                 Close
+               </button>
+             </div>
+           </>
+         )}
+
+         {/* AddPost Drawer */}
+         {addOpen && session && (
+           <>
+             <div className="backdrop" onClick={() => setAddOpen(false)}></div>
+             <div className="drawer add-drawer">
+               <AddPost session={session} fetchPosts={fetchPosts} />
+               <button className="close-btn" onClick={() => setAddOpen(false)}>
+                 Close
+               </button>
+             </div>
+           </>
+         )}
+
+         {/* Feed */}
+         <div className="feed">
+           {posts.map((post) => (
+             <div key={post.id} className="card">
+               <img src={post.image} alt={post.title} className="card-image" />
+               <div className="card-content">
+                 <h2 className="card-title">{post.title}</h2>
+                 <p className="card-artist">by {post.artist}</p>
+                 <p className="card-description">{post.description}</p>
+                 {session && (
+                   <button className="delete-btn" onClick={() => deletePost(post)}>
+                     Delete
+                   </button>
+                 )}
+               </div>
+             </div>
+           ))}
+         </div>
+       </div>
+     );
+  }

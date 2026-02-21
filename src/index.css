@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+: root {
+    --primary-color: #7C3AED; /* purple */
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -5,7 +13,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 60rem;
   margin: auto;
   padding: 20px;
 }
@@ -24,7 +32,7 @@ h1 {
 
 .card img {
   width: 100%;
-  height: 300px;
+  height: auto;
   object-fit: cover;
 }
 
@@ -61,4 +69,145 @@ input, textarea {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ddd;
+}
+
+/* Floating buttons */
+.floating-button {
+  position: fixed;
+  z-index: 50;
+  border-radius: 9999px;
+  padding: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+.floating-button:hover {
+  transform: scale(1.05);
+}
+.user-button {
+  top: 2rem;
+  right: 2rem;
+  background: (--primary-color);
+}
+.add-button {
+  bottom: 2rem;
+  right: 2rem;
+  background: (--primary-color);
+  color: white;
+}
+
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+}
+
+/* Drawers */
+.drawer {
+  position: fixed;
+  background: white;
+  z-index: 50;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.auth-drawer {
+  top: 0;
+  right: 0;
+  width: 10rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.auth {
+    display:flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.user-button-auth-drawer{
+    right: 14rem;
+    top: 2rem;
+}
+
+.add-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+  background: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  z-index: 50;
+}
+
+/* Close button */
+.close-btn {
+  margin-bottom: 5rem;
+}
+
+/* Sign out button */
+.signout-btn {
+  background: red;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+/* Feed & Cards */
+.feed {
+  margin-top: 24px;
+  display: column;
+  gap: 16px;
+  padding-bottom: 96px; /* avoid + button overlap */
+}
+@media(min-width: 768px) {
+  .feed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media(min-width: 1024px) {
+  .feed {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.card-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+.card-content {
+  padding: 12px;
+}
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+.card-artist {
+  color: #555;
+  margin-bottom: 8px;
+}
+.card-description {
+  margin-bottom: 8px;
+}
+.delete-btn {
+  background: red;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
 }
