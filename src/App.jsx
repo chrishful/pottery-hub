@@ -31,16 +31,22 @@ export default function App() {
         };
     }, []);
 
-  async function signUp() {
-      const email = prompt("Enter your email:");
-        const password = prompt("Enter your password:");
-        const { error } = await supabase.auth.signUp({ email, password });
+  async function signUp(email, password, name) {
+        const { error } = await supabase.auth.signUp(
+          {
+            email,
+            password,
+          },
+          {
+            data: {
+              full_name: name,
+            },
+          }
+        );
         if (error) alert("Error signing up: " + error.message);
     }
 
-    async function signIn() {
-        const email = prompt("Enter your email:");
-        const password = prompt("Enter your password:");
+    async function signIn(email, password) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) alert("Error signing in: " + error.message);
     }
@@ -76,13 +82,13 @@ export default function App() {
          <h1 className="title">Pottery Hub</h1>
 
          {/* Top-right user icon */}
-         <button className="floating-button user-button" onClick={() => setAuthOpen(!authOpen)}>
+         <button className="floating-button user-button" onClick={() => setAuthOpen(!addOpen ? !authOpen : authOpen)}>
            <User size={30} />
          </button>
 
          {/* Bottom-right add (+) icon */}
          {session && (
-           <button className="floating-button add-button" onClick={() => setAddOpen(true)}>
+           <button className="floating-button add-button" onClick={() => setAddOpen(!addOpen)}>
              <Plus size={30} />
            </button>
          )}
@@ -112,10 +118,10 @@ export default function App() {
          {/* AddPost Drawer */}
          {addOpen && session && (
            <>
-             <div className="backdrop" onClick={() => setAddOpen(false)}></div>
+             <div className="backdrop" onClick={() => setAddOpen(!addOpen)}></div>
              <div className="drawer add-drawer">
-               <AddPost session={session} fetchPosts={fetchPosts} />
-               <button className="close-btn" onClick={() => setAddOpen(false)}>
+               <AddPost session={session} fetchPosts={fetchPosts} setAddOpen={setAddOpen}/>
+               <button className="close-btn" onClick={() => setAddOpen(!addOpen)}>
                  Close
                </button>
              </div>
@@ -131,7 +137,7 @@ export default function App() {
                  <h2 className="card-title">{post.title}</h2>
                  <p className="card-artist">by {post.artist}</p>
                  <p className="card-description">{post.description}</p>
-                 {session && (
+                 {session && post.user_id === session.user.id && (
                    <button className="delete-btn" onClick={() => deletePost(post)}>
                      Delete
                    </button>

@@ -46,7 +46,7 @@ export default function AddPost(props) {
           setFile(null);
 
         await props.fetchPosts();
-        alert("Post added successfully");
+        props.setAddOpen(false);
         }
 
       return (
