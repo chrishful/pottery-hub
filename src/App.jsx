@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./index.css";
 import AddPost from "./components/AddPost";
-import { User } from "lucide-react";
-import { Plus } from "lucide-react";
+import { User, Plus } from "lucide-react";
 import Auth from "./components/Auth";
+import Comments from "./components/Comments";
+import Post from "./components/Post";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
@@ -134,20 +135,7 @@ export default function App() {
              {console.log(posts)}
            {posts.length == 0 && <p className="no-posts">Looks like there are no posts. *crickets*</p>}
            {posts.map((post) => (
-             <div key={post.id} className="card">
-               <img src={post.image} alt={post.title} className="card-image" />
-               <div className="card-content">
-                 <h2 className="card-title">{post.title}</h2>
-                 <p className="card-artist">by {post.artist}</p>
-                 <p className="card-description">{post.description}</p>
-                 {session && post.user_id === session.user.id && (
-                   <button className="delete-btn" onClick={() => deletePost(post)}>
-                     Delete
-                   </button>
-                 )}
-               </div>
-             </div>
-           ))}
+                 <Post key={post.id} post={post} session={session} deletePost={deletePost} />))}
          </div>
        </div>
      );
