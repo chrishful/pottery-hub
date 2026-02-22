@@ -24,6 +24,7 @@ export default function Post(props) {
 
       const toggleLike = async () => {
         if (!session) return;
+        setLiked(prevLiked => !prevLiked);
 
         if (liked) {
           await supabase
@@ -31,12 +32,10 @@ export default function Post(props) {
             .delete()
             .eq("user_id", session.user.id)
             .eq("post_id", post.id);
-          setLiked(false);
         } else {
           await supabase
             .from("post_likes")
             .insert({ user_id: session.user.id, post_id: post.id });
-          setLiked(true);
         }
       };
 
