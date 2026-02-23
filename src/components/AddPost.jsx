@@ -51,6 +51,7 @@ export default function AddPost(props) {
     await props.fetchPosts();
     props.setAddOpen(false);
     setUploading(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
