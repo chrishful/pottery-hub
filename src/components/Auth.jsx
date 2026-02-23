@@ -54,8 +54,7 @@ export default function Auth({ signIn, signUp }) {
                 required
               />
             </label>
-           )
-              }
+          )}
 
           <button type="submit" className="submit-btn">
             {mode === "signIn" ? "Sign In" : "Sign Up"}

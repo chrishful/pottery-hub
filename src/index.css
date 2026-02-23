@@ -3,14 +3,13 @@
 @tailwind utilities;
 
 :root {
-    --primary-color: #7C3AED;
-    --secondary-color: #deb8ff;
+  --primary-color: #7c3aed;
+  --secondary-color: #deb8ff;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;s
-  background-color: #f5f5f7;
+  font-family: Arial, sans-serif;
 }
 
 .title {
@@ -32,7 +31,7 @@ h1 {
   border-radius: 12px;
   margin-bottom: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card img {
@@ -55,7 +54,6 @@ button {
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
-  background-color: #7c3aed;
   color: white;
   cursor: pointer;
 }
@@ -70,7 +68,8 @@ button:hover {
   margin-bottom: 20px;
 }
 
-input, textarea {
+input,
+textarea {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -105,7 +104,7 @@ input, textarea {
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(2px);
   z-index: 40;
 }
@@ -116,7 +115,7 @@ input, textarea {
   background: white;
   z-index: 50;
   padding: 24px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 .auth-drawer {
   top: 0;
@@ -128,13 +127,13 @@ input, textarea {
   justify-content: space-between;
 }
 .auth {
-    display:flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.user-button-auth-drawer{
-    right: 14rem;
-    top: 2rem;
+.user-button-auth-drawer {
+  right: 14rem;
+  top: 2rem;
 }
 
 .add-drawer {
@@ -174,7 +173,7 @@ input, textarea {
   gap: 16px;
   padding-bottom: 96px; /* avoid + button overlap */
 }
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   .feed {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -192,9 +191,9 @@ input, textarea {
     right: 1rem;
     bottom: 1rem;
   }
-  }
+}
 
-@media(min-width: 1024px) {
+@media (min-width: 1024px) {
   .feed {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -204,7 +203,7 @@ input, textarea {
   border: 1px solid #ddd;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .card-image {
   width: 100%;
@@ -245,7 +244,7 @@ input, textarea {
 /* comments */
 .comments-section {
   width: 100%;
-  display:flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
@@ -258,30 +257,29 @@ input, textarea {
   align-items: center;
 }
 .add-comment-form {
-    text-align: center;
-    margin: 10px 0 10px 25%;
+  text-align: center;
+  margin: 10px 0 10px 25%;
 }
-
 
 /* user profile */
-.profile-section-on-card{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 10px 0 10px;
+.profile-section-on-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 10px 0 10px;
 }
-.profile-section-on-card-left{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+.profile-section-on-card-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
-.card-artist{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
+.card-artist {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 .user-icon {
   width: 40px;
@@ -294,20 +292,29 @@ input, textarea {
   justify-content: center;
 }
 .user-icon-svg {
-    fill: var(--primary-color);
+  fill: var(--primary-color);
 }
 
 /* like on post */
-.like-icon-on-card-in-feed{
-    width: 40px;
-    height: 40px;
-    margin: 0;
-    color: var(--primary-color);
+.like-icon-on-card-in-feed {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  color: var(--primary-color);
 }
 
-.like-icon-on-card-in-feed:hover{
-    fill: var(--secondary-color);
+.like-icon-on-card-in-feed:hover {
+  scale: 105%;
 }
 .liked {
-    fill: var(--primary-color);
+  fill: var(--primary-color);
+}
+
+.profile-section-on-card-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--primary-color);
+  font-weight: bold;
 }
