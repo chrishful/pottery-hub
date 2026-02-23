@@ -579,3 +579,26 @@ textarea {
   color: #888;
   font-size: 0.9rem;
 }
+
+.user-icon-wrapper {
+  width: 46px;
+  height: 46px;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+
+  /* Zoom in a little to make sure it fills the circle nicely */
+  transform: scale(1.5); /* 10% zoom */
+  transition: transform 0.2s; /* optional smooth effect */
+}

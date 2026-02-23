@@ -104,6 +104,7 @@ export default function App() {
           />
           <Route path="/profile" element={<ProfilePage session={session} />} />
           <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/profile/:userId" element={<ProfilePage />} />
         </Routes>
       </div>
     </BrowserRouter>

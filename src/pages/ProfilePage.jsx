@@ -1,28 +1,37 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, User } from "lucide-react";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const { userId } = useParams(); // dynamic route: /profile/:userId
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      let idToFetch = userId;
 
-      if (!user) {
-        navigate("/");
-        return;
+      // If no userId in URL, use the signed-in user
+      if (!idToFetch) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          navigate("/"); // redirect if not signed in
+          return;
+        }
+
+        idToFetch = user.id;
       }
 
+      // Fetch profile from Supabase
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id", idToFetch)
         .single();
 
       if (!error) setProfile(data);
@@ -30,7 +39,7 @@ export default function ProfilePage() {
     };
 
     fetchProfile();
-  }, [navigate]);
+  }, [navigate, userId]);
 
   if (loading) return <div className="container">Loading...</div>;
   if (!profile) return <div className="container">Profile not found.</div>;
@@ -46,12 +55,12 @@ export default function ProfilePage() {
         {profile.profile_pic ? (
           <img
             src={profile.profile_pic}
-            alt="Profile"
+            alt={profile.username}
             className="profile-avatar"
           />
         ) : (
           <div className="profile-avatar placeholder">
-            {profile.username?.[0]?.toUpperCase()}
+            {profile.username?.[0]?.toUpperCase() || <User size={30} />}
           </div>
         )}
 

@@ -2,12 +2,15 @@ import { User, Heart, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import Comments from "./Comments";
+import { Link } from "react-router-dom";
 
 export default function Post(props) {
   var post = props.post;
   var session = props.session;
   const [liked, setLiked] = useState(false);
   const [allLikes, setAllLikes] = useState(0);
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
     if (!session) return;
     async function checkLike() {
@@ -25,7 +28,9 @@ export default function Post(props) {
   useEffect(() => {
     // This is to update the number of likes on the post card
     fetchLikes();
-  }, [post.id]);
+    // This is to fetch the profile of the user who made the post, so we can display their name and profile picture on the card.
+    fetchProfile();
+  }, [post.id, post.user_id]);
 
   async function fetchLikes() {
     const { data, error } = await supabase
@@ -34,6 +39,20 @@ export default function Post(props) {
       .eq("post_id", post.id);
     if (!error) {
       setAllLikes(data.length);
+    }
+  }
+
+  async function fetchProfile() {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", post.user_id)
+      .single();
+    if (!error) {
+      console.log("Profile data:", data);
+      setProfile(data);
+    } else {
+      console.log(error);
     }
   }
 
@@ -60,8 +79,22 @@ export default function Post(props) {
       <div className="card-content">
         <div className="profile-section-on-card">
           <div className="profile-section-on-card-left">
-            <div className="user-icon">
-              <User className="user-icon-svg" size={30} />
+            <div className="user-icon-wrapper">
+              {profile?.profile_pic ? (
+                <Link to={`/profile/${profile.id}`}>
+                  <img
+                    src={profile.profile_pic}
+                    alt={profile.username || "Profile"}
+                    className="user-icon-img"
+                  />
+                </Link>
+              ) : (
+                <Link to={`/profile/${profile?.id || ""}`}>
+                  <div className="user-icon-placeholder">
+                    <User size={24} />
+                  </div>
+                </Link>
+              )}
             </div>
             <h2 className="card-artist">{post.artist}</h2>
           </div>
