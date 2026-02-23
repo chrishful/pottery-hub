@@ -84,10 +84,11 @@ export default function Post(props) {
         <img src={post.image} alt={post.title} className="card-image" />
         <p className="card-description">{post.description}</p>
       </div>
+      <Comments post={post} session={session} />
       <div className="card-actions">
         {session && post.user_id === session.user.id && (
           <button className="delete-btn" onClick={() => props.deletePost(post)}>
-            Delete
+            Delete Post
           </button>
         )}
       </div>

@@ -1,33 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../supabase";
 
 export default function Comments(props) {
   const [post, setPost] = useState(props.post);
   const [newCommentText, setNewCommentText] = useState("");
+  const [comments, setComments] = useState([]);
 
-  function deleteComment() {
-    console.log("delete comment");
+  function deleteComment(comment) {
+    if (!props.session)
+      return alert("You must be signed in to delete comments");
+    supabase
+      .from("comments")
+      .delete()
+      .eq("id", comment.id)
+      .eq("user_id", props.session.user.id)
+      .then(({ error }) => {
+        if (error) {
+          alert("Error deleting comment: " + error.message);
+        } else {
+          fetchComments();
+        }
+      });
   }
 
   function addComment() {
-    console.log("add comment");
+    if (!props.session) return alert("You must be signed in to comment");
+    supabase
+      .from("comments")
+      .insert({
+        text: newCommentText,
+        post_id: post.id,
+        user_id: props.session.user.id,
+        user_display_name:
+          props.session.user.user_metadata.full_name ?? "John Doe",
+      })
+      .then(({ error }) => {
+        if (error) {
+          alert("Error adding comment: " + error.message);
+        } else {
+          fetchComments();
+        }
+      });
+  }
+  async function fetchComments() {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("post_id", post.id)
+      .order("created_at", { ascending: false });
+    console.log(error);
+    if (!error) {
+      console.log(data);
+      setComments(data);
+    }
   }
 
-  var comments = [];
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
   return (
     <div className="comments-section">
-      {comments.map((c) => (
-        <div key={c.id} className="comment-card">
-          <p>
-            <strong>{c.user_display_name}</strong>:
-          </p>
-          <p>{c.text}</p>
-          {props.session?.user.id === c.user_id && (
-            <button onClick={() => deleteComment(c)}>Delete</button>
-          )}
-        </div>
-      ))}
-
       {props.session && (
         <form
           className="add-comment-form"
@@ -42,9 +75,29 @@ export default function Comments(props) {
             onChange={(e) => setNewCommentText(e.target.value)}
             placeholder="Write a comment..."
           />
-          <button type="submit">Comment</button>
+          <button className="add-comment-submit" type="submit">
+            Comment
+          </button>
         </form>
       )}
+      <div className="comments-cards">
+        {comments.map((c) => (
+          <div key={c.id} className="comment-card">
+            <div className="comment-name-and-date">
+              <p>
+                <strong>{c.user_display_name}</strong> says
+              </p>
+              <p className="comment-timestamp">
+                {new Date(c.created_at).toLocaleString()}
+              </p>
+            </div>
+            <p>{c.text}</p>
+            {props.session?.user.id === c.user_id && (
+              <button onClick={() => deleteComment(c)}>Delete Comment</button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

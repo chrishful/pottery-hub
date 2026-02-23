@@ -56,6 +56,7 @@ button {
   border-radius: 8px;
   color: white;
   cursor: pointer;
+  background-color: var(--primary-color);
 }
 
 button:hover {
@@ -245,6 +246,30 @@ textarea {
 .comments-section {
   width: 100%;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: right;
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.comments-cards {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+.comment-card {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comment-name-and-date {
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
@@ -255,10 +280,6 @@ textarea {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-}
-.add-comment-form {
-  text-align: center;
-  margin: 10px 0 10px 25%;
 }
 
 /* user profile */
@@ -317,4 +338,28 @@ textarea {
   gap: 10px;
   color: var(--primary-color);
   font-weight: bold;
+}
+
+.add-comment-form input,
+.add-comment-form button {
+  box-sizing: border-box;
+  height: 40px; /* or whatever you want */
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* remove button default border */
+.add-comment-form button {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+}
+
+/* input style */
+.add-comment-form input {
+  border: 1px solid #ddd; /* optional */
+  padding: 0 12px; /* horizontal padding */
+  flex: 1; /* if inside a flex container */
 }
