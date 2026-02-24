@@ -38,6 +38,25 @@ export default function App() {
     setPosts(data);
   }
 
+  async function deletePost(post) {
+    console.log("Deleting post:", post.id);
+    const { error } = await supabase.from("posts").delete().eq("id", post.id);
+    if (error) console.error("Post delete error:", error);
+    else {
+      if (post.image) {
+        const imagePath = post.image.split(
+          "/storage/v1/object/public/pottery-images/",
+        )[1];
+        const { error: storageError } = await supabase.storage
+          .from("pottery-images")
+          .remove([imagePath]);
+
+        if (storageError) console.error("Storage delete error:", storageError);
+      }
+    }
+    fetchPosts();
+  }
+
   return (
     <BrowserRouter>
       <div className="container">
@@ -102,9 +121,9 @@ export default function App() {
               />
             }
           />
-          <Route path="/profile" element={<ProfilePage session={session} />} />
+          <Route path="/profile" element={<ProfilePage session={session} deletePost={deletePost} fetchPosts={fetchPosts} />} />
           <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/profile/:userId" element={<ProfilePage />} />
+          <Route path="/profile/:userId" element={<ProfilePage session={session} deletePost={deletePost} fetchPosts={fetchPosts} />} />
         </Routes>
       </div>
     </BrowserRouter>
