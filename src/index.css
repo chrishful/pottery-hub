@@ -612,6 +612,8 @@ textarea {
 
 @media (max-width: 640px) {
   .user-icon-img {
-    transform: scale(1.3); /* slightly less zoom on smaller screens */
   }
+  .profile-section-on-card-right{
+  flex-direction: column;
+  gap:0;}
 }
