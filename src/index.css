@@ -353,7 +353,6 @@ textarea {
   font-size: 1rem;
 }
 
-
 .add-comment-form button {
   border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -611,9 +610,11 @@ textarea {
 }
 
 @media (max-width: 640px) {
-  .user-icon-img {
+  .card-artist {
+    font-size: 0.95rem;
   }
-  .profile-section-on-card-right{
-  flex-direction: column;
-  gap:0;}
+  .profile-section-on-card-right {
+    font-size: 0.95rem;
+    gap: 5px;
+  }
 }

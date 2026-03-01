@@ -121,9 +121,27 @@ export default function App() {
               />
             }
           />
-          <Route path="/profile" element={<ProfilePage session={session} deletePost={deletePost} fetchPosts={fetchPosts} />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfilePage
+                session={session}
+                deletePost={deletePost}
+                fetchPosts={fetchPosts}
+              />
+            }
+          />
           <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/profile/:userId" element={<ProfilePage session={session} deletePost={deletePost} fetchPosts={fetchPosts} />} />
+          <Route
+            path="/profile/:userId"
+            element={
+              <ProfilePage
+                session={session}
+                deletePost={deletePost}
+                fetchPosts={fetchPosts}
+              />
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

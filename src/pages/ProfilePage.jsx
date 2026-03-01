@@ -11,14 +11,14 @@ export default function ProfilePage(props) {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
- const fetchPosts = async (userId) => {
-    const { data, error  } = await supabase
+  const fetchPosts = async (userId) => {
+    const { data, error } = await supabase
       .from("posts")
       .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: true });
     if (!error) setPosts(data);
-  }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -46,9 +46,9 @@ export default function ProfilePage(props) {
         .single();
 
       if (!error) {
-          setProfile(data);
-          await fetchPosts(idToFetch);
-          }
+        setProfile(data);
+        await fetchPosts(idToFetch);
+      }
       setLoading(false);
     };
 
@@ -88,11 +88,7 @@ export default function ProfilePage(props) {
           <p className="no-posts">Looks like this user no posts.</p>
         )}
         {posts.map((post) => (
-          <Post
-            key={post.id}
-            post={post}
-            session={props.session}
-          />
+          <Post key={post.id} post={post} session={props.session} />
         ))}
       </div>
     </div>
