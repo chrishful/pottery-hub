@@ -318,8 +318,8 @@ textarea {
 
 /* like on post */
 .like-icon-on-card-in-feed {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   margin: 0;
   color: var(--primary-color);
 }
@@ -616,5 +616,9 @@ textarea {
   .profile-section-on-card-right {
     font-size: 0.95rem;
     gap: 5px;
+  }
+  .like-icon-on-card-in-feed {
+    width: 35px;
+    height: 35px;
   }
 }
