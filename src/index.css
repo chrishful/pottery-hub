@@ -353,6 +353,7 @@ textarea {
   font-size: 1rem;
 }
 
+
 .add-comment-form button {
   border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -589,6 +590,12 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media (max-width: 640px) {
+  .user-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 .user-icon-img {
