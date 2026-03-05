@@ -399,7 +399,7 @@ textarea {
 .auth-title {
   text-align: center;
   font-size: 1.5rem;
-  color: #4b0082;
+  color: var(--primary-color);
 }
 .auth-form {
   display: flex;
@@ -413,7 +413,7 @@ textarea {
   font-size: 1rem;
 }
 .submit-btn {
-  background: #4b0082;
+  background: var(--primary-color);
   color: white;
   padding: 0.75rem;
   border: none;
@@ -423,12 +423,12 @@ textarea {
   margin-top: 0.5rem;
 }
 .submit-btn:hover {
-  background: #5e0099;
+  background: var(--secondary-color);
 }
 .toggle-mode-btn {
   background: none;
   border: none;
-  color: #4b0082;
+  color: var(--primary-color);
   cursor: pointer;
   text-align: center;
   margin-top: 0.5rem;
