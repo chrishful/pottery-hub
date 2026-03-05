@@ -10,6 +10,7 @@ export default function Post(props) {
   const [liked, setLiked] = useState(false);
   const [allLikes, setAllLikes] = useState(0);
   const [profile, setProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!session) return;
@@ -24,6 +25,27 @@ export default function Post(props) {
     }
     checkLike();
   }, [post.id, session]);
+
+  useEffect(() => {
+    if (!session) return;
+
+    async function checkAdmin() {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        setIsAdmin(false);
+        return;
+      }
+      setIsAdmin(data.role === "ADMIN");
+    }
+
+    checkAdmin();
+  }, [session]);
 
   useEffect(() => {
     // This is to update the number of likes on the post card
@@ -49,7 +71,6 @@ export default function Post(props) {
       .eq("id", post.user_id)
       .single();
     if (!error) {
-      console.log("Profile data:", data);
       setProfile(data);
     } else {
       console.log(error);
@@ -119,7 +140,7 @@ export default function Post(props) {
       </div>
       <Comments post={post} session={session} />
       <div className="card-actions">
-        {session && post.user_id === session.user.id && (
+        {session && (post.user_id === session.user.id || isAdmin) && (
           <button className="delete-btn" onClick={() => props.deletePost(post)}>
             Delete Post
           </button>

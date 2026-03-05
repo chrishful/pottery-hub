@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #7c3aed;
-  --secondary-color: #deb8ff;
+  --primary-color: #7b521c;
+  --secondary-color: #df8712;
+  --background-color: #fcf5ec;
 }
 
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background-color: var(--background-color);
 }
 
 .title {
@@ -163,8 +165,8 @@ textarea {
 .signout-btn {
   background: red;
   color: white;
-  padding: 8px 16px;
   border-radius: 8px;
+  margin-bottom: 5rem;
 }
 
 /* Feed & Cards */
@@ -257,6 +259,7 @@ textarea {
   width: 90%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   gap: 10px;
 }
@@ -620,5 +623,61 @@ textarea {
   .like-icon-on-card-in-feed {
     width: 35px;
     height: 35px;
+  }
+}
+
+.skeleton {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+.skeleton-user {
+  width: 120px;
+  height: 15px;
+  background: #ddd;
+  border-radius: 6px;
+}
+
+.skeleton-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 250px;
+  background: #ddd;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.skeleton-text {
+  height: 14px;
+  background: #ddd;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
   }
 }

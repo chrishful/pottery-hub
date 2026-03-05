@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 import AddPost from "../components/AddPost";
-import { User, Plus } from "lucide-react";
-import Auth from "../components/Auth";
-import Comments from "../components/Comments";
+import { Plus } from "lucide-react";
 import Post from "../components/Post";
+import PostSkeleton from "../components/SkeletonPost";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [session, setSession] = useState(null);
-  const [authOpen, setAuthOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(true);
 
+  // Load posts on page load
   useEffect(() => {
     fetchPosts();
   }, []);
 
+  // Handle auth session
   useEffect(() => {
-    // so notes- basically useEffect runs once before the component renders ([]), and then we call getSession, then sets the session locally.
-    const session = supabase.auth.getSession().then(({ data }) => {
+    const loadSession = async () => {
+      const { data } = await supabase.auth.getSession();
       setSession(data.session);
-    });
-    // Then it basically creates a listener so that if the auth state changes, it refreshes.
+    };
+
+    loadSession();
+
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -33,40 +36,47 @@ export default function FeedPage() {
     };
   }, []);
 
-  async function signIn(email, password) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) alert("Error signing in: " + error.message);
-    else setAuthOpen(false);
-  }
-
   async function fetchPosts() {
+    setLoadingPosts(true);
+
     const { data, error } = await supabase
       .from("posts")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error) setPosts(data);
+    if (error) {
+      console.error("Error fetching posts:", error);
+    } else {
+      setPosts(data);
+    }
+
+    setLoadingPosts(false);
   }
 
   async function deletePost(post) {
     console.log("Deleting post:", post.id);
-    const { error } = await supabase.from("posts").delete().eq("id", post.id);
-    if (error) console.error("Post delete error:", error);
-    else {
-      if (post.image) {
-        const imagePath = post.image.split(
-          "/storage/v1/object/public/pottery-images/",
-        )[1];
-        const { error: storageError } = await supabase.storage
-          .from("pottery-images")
-          .remove([imagePath]);
 
-        if (storageError) console.error("Storage delete error:", storageError);
+    const { error } = await supabase.from("posts").delete().eq("id", post.id);
+
+    if (error) {
+      console.error("Post delete error:", error);
+      return;
+    }
+
+    if (post.image) {
+      const imagePath = post.image.split(
+        "/storage/v1/object/public/pottery-images/",
+      )[1];
+
+      const { error: storageError } = await supabase.storage
+        .from("pottery-images")
+        .remove([imagePath]);
+
+      if (storageError) {
+        console.error("Storage delete error:", storageError);
       }
     }
+
     fetchPosts();
   }
 
@@ -74,27 +84,29 @@ export default function FeedPage() {
     <div className="container">
       <h1 className="title">Pottery Hub</h1>
 
-      {/* Bottom-right add (+) icon */}
+      {/* Add post button */}
       {session && (
         <button
           className="floating-button add-button"
-          onClick={() => setAddOpen(!addOpen)}
+          onClick={() => setAddOpen(true)}
         >
           <Plus size={30} />
         </button>
       )}
 
-      {/* AddPost Drawer */}
+      {/* Add post drawer */}
       {addOpen && session && (
         <>
-          <div className="backdrop" onClick={() => setAddOpen(!addOpen)}></div>
+          <div className="backdrop" onClick={() => setAddOpen(false)}></div>
+
           <div className="drawer add-drawer">
             <AddPost
               session={session}
               fetchPosts={fetchPosts}
               setAddOpen={setAddOpen}
             />
-            <button className="close-btn" onClick={() => setAddOpen(!addOpen)}>
+
+            <button className="close-btn" onClick={() => setAddOpen(false)}>
               Close
             </button>
           </div>
@@ -103,35 +115,29 @@ export default function FeedPage() {
 
       {/* Feed */}
       <div className="feed">
-        {console.log(posts)}
-        {posts.length == 0 && (
+        {loadingPosts && (
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
+        )}
+
+        {!loadingPosts && posts.length === 0 && (
           <p className="no-posts">Looks like there are no posts. *crickets*</p>
         )}
-        {posts.map((post) => (
-          <Post
-            key={post.id}
-            post={post}
-            session={session}
-            deletePost={deletePost}
-          />
-        ))}
-      </div>
-      {/* Add Post Drawer */}
-      {addOpen && session && (
-        <>
-          <div className="backdrop" onClick={() => setAddOpen(!addOpen)}></div>
-          <div className="drawer add-drawer">
-            <AddPost
+
+        {!loadingPosts &&
+          posts.map((post) => (
+            <Post
+              key={post.id}
+              post={post}
               session={session}
-              fetchPosts={fetchPosts}
-              setAddOpen={setAddOpen}
+              deletePost={deletePost}
             />
-            <button className="close-btn" onClick={() => setAddOpen(!addOpen)}>
-              Close
-            </button>
-          </div>
-        </>
-      )}
+          ))}
+      </div>
     </div>
   );
 }

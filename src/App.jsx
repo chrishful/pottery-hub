@@ -13,6 +13,8 @@ export default function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -85,26 +87,33 @@ export default function App() {
               ) : (
                 <>
                   <div className="profile-and-sign-out">
-                    <button>
+                    <button onClick={() => setAuthOpen(false)}>
                       <Link
                         to="/profile"
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
-                        Go to Profile
+                        <img
+                          src={profile?.profile_pic}
+                          alt={profile?.username || "Profile"}
+                          className="user-icon-img"
+                        />
                       </Link>
                     </button>
                     <button
-                      className="signout-btn"
-                      onClick={() => supabase.auth.signOut()}
+                      className="close-btn"
+                      onClick={() => setAuthOpen(false)}
                     >
-                      Sign Out
+                      Close
                     </button>
                   </div>
+                  <button
+                    className="signout-btn"
+                    onClick={() => supabase.auth.signOut()}
+                  >
+                    Sign Out
+                  </button>
                 </>
               )}
-              <button className="close-btn" onClick={() => setAuthOpen(false)}>
-                Close
-              </button>
             </div>
           </>
         )}
