@@ -67,11 +67,13 @@ export default function Comments(props) {
           className="add-comment-form"
           onSubmit={(e) => {
             e.preventDefault();
-            addComment(post.id, newCommentText, props.session);
-            setNewCommentText("");
+            if (newCommentText.trim() !== "") {
+                addComment(post.id, newCommentText, props.session);
+                setNewCommentText("");
+            }
           }}
         >
-          <input
+          <textarea
             value={newCommentText}
             onChange={(e) => setNewCommentText(e.target.value)}
             placeholder="Write a comment..."

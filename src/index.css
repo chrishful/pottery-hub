@@ -280,14 +280,20 @@ button:hover {
   align-items: center;
 }
 
-.add-comment-form input {
+.add-comment-form textarea {
   box-sizing: border-box;
   height: 40px;
   border-radius: var(--radius-md);
   font-size: 1rem;
   border: 1px solid var(--border-color);
-  padding: 0 12px;
+  justify-text: center;
   flex: 1;
+}
+@media (max-width: 640px) {
+  .add-comment-form textarea {
+    height: 35px;
+    font-size: 0.9rem;
+  }
 }
 
 .add-comment-form button {
