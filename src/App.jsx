@@ -7,13 +7,14 @@ import { supabase } from "./supabase";
 import AddPost from "./components/AddPost";
 import Auth from "./components/Auth";
 import { User, Plus } from "lucide-react";
+import { ProfileProvider } from "./profile/ProfileContext";
+import Sidebar from "./components/Sidebar";
 
 export default function App() {
   const [session, setSession] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -60,99 +61,52 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
-      <div className="container">
-        {/* Floating buttons */}
-        <button
-          className="floating-button user-button"
-          onClick={() => setAuthOpen(!addOpen ? !authOpen : authOpen)}
-        >
-          <User size={30} />
-        </button>
+    <ProfileProvider>
+      <BrowserRouter>
+        <div className="container">
+          <Sidebar
+            authOpen={authOpen}
+            setAuthOpen={setAuthOpen}
+            addOpen={addOpen}
+            session={session}
+          />
 
-        {/* Auth Drawer */}
-        {authOpen && (
-          <>
-            <div className="backdrop" onClick={() => setAuthOpen(false)}></div>
-            <div className="drawer auth-drawer">
-              {!session ? (
-                <button onClick={() => setAuthOpen(false)}>
-                  <Link
-                    to="/sign-in"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Sign in or Sign Up
-                  </Link>
-                </button>
-              ) : (
-                <>
-                  <div className="profile-and-sign-out">
-                    <button onClick={() => setAuthOpen(false)}>
-                      <Link
-                        to="/profile"
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <img
-                          src={profile?.profile_pic}
-                          alt={profile?.username || "Profile"}
-                          className="user-icon-img"
-                        />
-                      </Link>
-                    </button>
-                    <button
-                      className="close-btn"
-                      onClick={() => setAuthOpen(false)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                  <button
-                    className="signout-btn"
-                    onClick={() => supabase.auth.signOut()}
-                  >
-                    Sign Out
-                  </button>
-                </>
-              )}
-            </div>
-          </>
-        )}
-
-        {/* Routes */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <FeedPage
-                session={session}
-                posts={posts}
-                fetchPosts={fetchPosts}
-              />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProfilePage
-                session={session}
-                deletePost={deletePost}
-                fetchPosts={fetchPosts}
-              />
-            }
-          />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route
-            path="/profile/:userId"
-            element={
-              <ProfilePage
-                session={session}
-                deletePost={deletePost}
-                fetchPosts={fetchPosts}
-              />
-            }
-          />
-        </Routes>
-      </div>
-    </BrowserRouter>
+          {/* Routes */}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <FeedPage
+                  session={session}
+                  posts={posts}
+                  fetchPosts={fetchPosts}
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  session={session}
+                  deletePost={deletePost}
+                  fetchPosts={fetchPosts}
+                />
+              }
+            />
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route
+              path="/profile/:userId"
+              element={
+                <ProfilePage
+                  session={session}
+                  deletePost={deletePost}
+                  fetchPosts={fetchPosts}
+                />
+              }
+            />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </ProfileProvider>
   );
 }

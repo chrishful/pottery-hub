@@ -4,12 +4,14 @@ import AddPost from "../components/AddPost";
 import { Plus } from "lucide-react";
 import Post from "../components/Post";
 import PostSkeleton from "../components/SkeletonPost";
+import { useProfile } from "../profile/ProfileContext";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [session, setSession] = useState(null);
   const [addOpen, setAddOpen] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
+  const { profile, updateProfile, loading: loadingProfile } = useProfile();
 
   // Load posts on page load
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function FeedPage() {
     const { data, error } = await supabase
       .from("posts")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: true });
 
     if (error) {
       console.error("Error fetching posts:", error);
@@ -50,6 +52,7 @@ export default function FeedPage() {
       setPosts(data);
     }
 
+    console.log(profile);
     setLoadingPosts(false);
   }
 

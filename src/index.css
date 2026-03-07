@@ -2,60 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   TOKENS
+   ============================================================ */
 :root {
   --primary-color: #7b521c;
   --secondary-color: #df8712;
   --background-color: #fcf5ec;
+  --border-color: #ddd;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.2);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: var(--background-color);
 }
 
-.title {
-  color: var(--primary-color);
-}
-
-.container {
-  max-width: 60rem;
-  margin: auto;
-  padding: 20px;
-}
-
 h1 {
   text-align: center;
 }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-.content {
-  padding: 16px;
-}
-
-.artist {
-  color: gray;
-  font-size: 0.9rem;
+input,
+textarea {
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
 }
 
 button {
   margin-top: 10px;
   padding: 8px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: white;
   cursor: pointer;
   background-color: var(--primary-color);
@@ -64,6 +53,20 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  max-width: 60rem;
+  margin: auto;
+  padding: 20px;
+}
+
+.title {
+  color: var(--primary-color);
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -71,39 +74,404 @@ button:hover {
   margin-bottom: 20px;
 }
 
-input,
-textarea {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+/* ============================================================
+   FEED
+   ============================================================ */
+.feed {
+  margin-top: 24px;
+  display: column;
+  gap: 16px;
+  padding-bottom: 96px;
 }
 
-/* Floating buttons */
+@media (min-width: 768px) {
+  .feed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feed {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.no-posts {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+  font-size: 1.25rem;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.card-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.card-content,
+.content {
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-artist {
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.card-description {
+  margin-bottom: 8px;
+}
+
+.card-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.delete-btn {
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  width: 50%;
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+
+/* Profile section on card */
+.profile-section-on-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 10px;
+}
+
+.profile-section-on-card-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.profile-section-on-card-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Like button */
+.like-icon-on-card-in-feed {
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.like-icon-on-card-in-feed:hover {
+  scale: 105%;
+}
+
+.liked {
+  fill: var(--primary-color);
+}
+
+@media (max-width: 640px) {
+  .card-artist {
+    font-size: 0.95rem;
+  }
+  .profile-section-on-card-right {
+    font-size: 0.95rem;
+    gap: 5px;
+  }
+  .like-icon-on-card-in-feed {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* ============================================================
+   COMMENTS
+   ============================================================ */
+.comments-section {
+  width: 100%;
+  padding: 0 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comments-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-card {
+  background: #fafafa;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comment-name-and-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.comment-timestamp {
+  font-size: 0.75rem;
+  opacity: 0.45;
+}
+
+.comment-body {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* Add comment form */
+.add-comment-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.add-comment-form input {
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  padding: 0 12px;
+  flex: 1;
+}
+
+.add-comment-form button {
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .comment-card {
+    width: 100%;
+  }
+  .comment-name-and-date {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
+.comments-section {
+  width: 100%;
+  box-sizing: border-box; /* THIS is likely the fix — prevents padding from adding width */
+  padding: 0 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comments-cards {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-card {
+  width: 100%;
+  box-sizing: border-box; /* same fix */
+  /* rest of styles... */
+}
+
+/* ============================================================
+   USER ICON
+   ============================================================ */
+.user-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon-svg {
+  fill: var(--primary-color);
+}
+
+.user-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+.user-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.profile-section-on-card-left .user-icon-wrapper .user-icon-img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.user-icon-fallback {
+  color: #888;
+}
+
+.user-icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.user-icon-button .user-icon-wrapper {
+  border-color: var(--primary-color);
+  width: 100px;
+  height: 100px;
+}
+
+/* ============================================================
+   FLOATING BUTTONS
+   ============================================================ */
 .floating-button {
   position: fixed;
   z-index: 50;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 12px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
   transition: transform 0.2s;
 }
+
 .floating-button:hover {
   transform: scale(1.05);
 }
+
 .user-button {
   top: 2rem;
   right: 2rem;
   background: var(--primary-color);
 }
+
 .add-button {
   bottom: 2rem;
   right: 2rem;
+  width: 100px;
   background: var(--primary-color);
   color: white;
 }
 
-/* Backdrop */
+.floating-back-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  background: var(--primary-color);
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  z-index: 1000;
+}
+
+.floating-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 640px) {
+  .user-button {
+    right: 1rem;
+    top: 1rem;
+  }
+  .add-button {
+    right: 1rem;
+    bottom: 1rem;
+  }
+}
+
+/* ============================================================
+   DRAWERS & BACKDROP
+   ============================================================ */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -112,14 +480,14 @@ textarea {
   z-index: 40;
 }
 
-/* Drawers */
 .drawer {
   position: fixed;
   background: white;
   z-index: 50;
   padding: 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
+
 .auth-drawer {
   top: 0;
   right: 0;
@@ -129,11 +497,7 @@ textarea {
   flex-direction: column;
   justify-content: space-between;
 }
-.auth {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+
 .user-button-auth-drawer {
   right: 14rem;
   top: 2rem;
@@ -152,222 +516,19 @@ textarea {
   padding: 2rem;
   background: white;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   z-index: 50;
 }
 
-/* Close button */
 .close-btn {
   margin-bottom: 5rem;
 }
 
-/* Sign out button */
 .signout-btn {
   background: red;
   color: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 5rem;
-}
-
-/* Feed & Cards */
-.feed {
-  margin-top: 24px;
-  display: column;
-  gap: 16px;
-  padding-bottom: 96px; /* avoid + button overlap */
-}
-@media (min-width: 768px) {
-  .feed {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .add-drawer {
-    width: 20rem;
-  }
-  .user-button {
-    right: 1rem;
-    top: 1rem;
-  }
-  .add-button {
-    right: 1rem;
-    bottom: 1rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .feed {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.card-image {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-}
-.card-content {
-  padding: 12px;
-}
-.card-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-.card-artist {
-  color: var(--primary-color);
-  margin-bottom: 8px;
-}
-.card-description {
-  margin-bottom: 8px;
-}
-.delete-btn {
-  background: (--primary-color);
-  color: white;
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  width: 50%;
-  border-radius: 6px;
-  margin: 10px 0 10px 0;
-}
-
-.no-posts {
-  text-align: center;
-  color: #777;
-  margin-top: 40px;
-  font-size: 1.25rem;
-}
-
-/* comments */
-.comments-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: right;
-  padding-left: 10px;
-  padding-bottom: 10px;
-}
-
-.comments-cards {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 10px;
-}
-.comment-card {
-  padding: 0 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.comment-name-and-date {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-actions {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-/* user profile */
-.profile-section-on-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 10px 0 10px;
-}
-.profile-section-on-card-left {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.card-artist {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-}
-.user-icon {
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--primary-color);
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.user-icon-svg {
-  fill: var(--primary-color);
-}
-
-/* like on post */
-.like-icon-on-card-in-feed {
-  width: 48px;
-  height: 48px;
-  margin: 0;
-  color: var(--primary-color);
-}
-
-.like-icon-on-card-in-feed:hover {
-  scale: 105%;
-}
-.liked {
-  fill: var(--primary-color);
-}
-
-.profile-section-on-card-right {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
-.add-comment-form input {
-  box-sizing: border-box;
-  height: 40px;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-.add-comment-form button {
-  box-sizing: border-box;
-  height: 40px;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.add-comment-form button {
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: var(--primary-color);
-  color: white;
-  cursor: pointer;
-}
-
-.add-comment-form input {
-  border: 1px solid #ddd;
-  padding: 0 12px;
-  flex: 1;
 }
 
 .profile-and-sign-out {
@@ -375,7 +536,22 @@ textarea {
   flex-direction: column;
   gap: 12px;
 }
-/* auth page */
+
+@media (max-width: 640px) {
+  .add-drawer {
+    width: 20rem;
+  }
+}
+
+/* ============================================================
+   AUTH PAGE
+   ============================================================ */
+.auth {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .auth-overlay {
   position: fixed;
   inset: 0;
@@ -385,33 +561,38 @@ textarea {
   justify-content: center;
   padding: 1rem;
 }
+
 .auth-modal {
   background: #fafafa;
   border-radius: 1rem;
   padding: 2rem;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .auth-title {
   text-align: center;
   font-size: 1.5rem;
   color: var(--primary-color);
 }
+
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 .auth-form input {
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
   border-radius: 0.75rem;
   font-size: 1rem;
 }
+
 .submit-btn {
   background: var(--primary-color);
   color: white;
@@ -422,9 +603,11 @@ textarea {
   cursor: pointer;
   margin-top: 0.5rem;
 }
+
 .submit-btn:hover {
   background: var(--secondary-color);
 }
+
 .toggle-mode-btn {
   background: none;
   border: none;
@@ -433,18 +616,21 @@ textarea {
   text-align: center;
   margin-top: 0.5rem;
 }
+
 .profile-pic-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
 }
+
 .profile-preview {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
 }
+
 .profile-placeholder {
   width: 80px;
   height: 80px;
@@ -456,20 +642,24 @@ textarea {
   font-size: 0.75rem;
   color: #555;
 }
+
 .profile-pic-upload input[type="file"] {
   margin-top: 0.25rem;
 }
 
-/* profile page */
+/* ============================================================
+   PROFILE PAGE
+   ============================================================ */
 .profile-container {
   padding: 2rem 1rem;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
 }
 
 .profile-card {
   background: #fafafa;
-  border-radius: 1.5rem;
+  border-radius: var(--radius-xl);
   padding: 2rem;
   text-align: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -509,123 +699,9 @@ textarea {
   padding: 1rem;
 }
 
-.profile-container {
-  padding: 2rem 1rem;
-  max-width: 600px;
-  margin: 0 auto;
-  position: relative;
-}
-
-/* Floating Back Button */
-.floating-back-btn {
-  position: fixed;
-  top: 2rem;
-  left: 2rem;
-
-  background: var(--primary-color);
-  border: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-  z-index: 1000;
-}
-
-.floating-back-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
-}
-
-.profile-card {
-  background: #fafafa;
-  border-radius: 1.5rem;
-  padding: 2rem;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 1rem;
-}
-
-.placeholder {
-  background: #4b0082;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-}
-
-.username {
-  color: #666;
-  margin-top: -0.5rem;
-}
-
-.phone {
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.user-icon-wrapper {
-  width: 46px;
-  height: 46px;
-  border: 2px solid var(--primary-color);
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (max-width: 640px) {
-  .user-icon-wrapper {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-.user-icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-
-  /* Zoom in a little to make sure it fills the circle nicely */
-  transform: scale(1.5); /* 10% zoom */
-  transition: transform 0.2s; /* optional smooth effect */
-}
-
-@media (max-width: 640px) {
-  .card-artist {
-    font-size: 0.95rem;
-  }
-  .profile-section-on-card-right {
-    font-size: 0.95rem;
-    gap: 5px;
-  }
-  .like-icon-on-card-in-feed {
-    width: 35px;
-    height: 35px;
-  }
-}
-
+/* ============================================================
+   SKELETON LOADER
+   ============================================================ */
 .skeleton {
   animation: pulse 1.5s infinite ease-in-out;
 }
@@ -641,7 +717,7 @@ textarea {
   width: 120px;
   height: 15px;
   background: #ddd;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .skeleton-header {
@@ -662,7 +738,7 @@ textarea {
 .skeleton-text {
   height: 14px;
   background: #ddd;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin-bottom: 8px;
 }
 
@@ -680,4 +756,120 @@ textarea {
   100% {
     opacity: 0.6;
   }
+}
+/* ============================================================
+   ADD POST FORM
+   ============================================================ */
+.add-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.image-upload-area {
+  width: 100%;
+  height: 180px;
+  border: 2px dashed var(--primary-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  overflow: hidden;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+
+.image-upload-area:hover {
+  background: rgba(123, 82, 28, 0.05);
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.add-post-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-post-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.add-post-input:focus {
+  border-color: var(--primary-color);
+}
+
+.add-post-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  min-height: 80px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.add-post-textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.add-post-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0;
+  transition: background 0.2s;
+}
+
+.add-post-btn:hover {
+  background: var(--secondary-color);
+}
+
+.upload-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 3rem 0;
+  color: var(--primary-color);
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.upload-spinner {
+  animation: spin 0.8s linear infinite;
+  color: var(--primary-color);
 }

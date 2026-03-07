@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabase";
+import { useProfile } from "../profile/ProfileContext";
 
 export default function Comments(props) {
   const [post, setPost] = useState(props.post);
   const [newCommentText, setNewCommentText] = useState("");
   const [comments, setComments] = useState([]);
+  const { profile } = useProfile();
 
   function deleteComment(comment) {
     if (!props.session)
@@ -31,8 +33,7 @@ export default function Comments(props) {
         text: newCommentText,
         post_id: post.id,
         user_id: props.session.user.id,
-        user_display_name:
-          props.session.user.user_metadata.full_name ?? "John Doe",
+        user_display_name: profile.display_name ?? "John Doe",
       })
       .then(({ error }) => {
         if (error) {
@@ -88,7 +89,7 @@ export default function Comments(props) {
                 <strong>{c.user_display_name}</strong> says
               </p>
               <p className="comment-timestamp">
-                {new Date(c.created_at).toLocaleString()}
+                on {new Date(c.created_at).toLocaleString()}
               </p>
             </div>
             <p>{c.text}</p>
